@@ -1,42 +1,14 @@
-import { render, RenderPosition } from './framework/render.js';
-import HeaderComponent from './view/header-component.js';
-import FormHeaderComponent from './view/form-header-component.js';
-import FilterHeaderComponent from './view/filter-header-component.js';
-import RasListHeaderComponent from './view/ras-list-header-component.js';
+import { expenses } from "./mock/mock.js";
+import ExpenseModel from "./model/model.js";
+import ExpenseFormView from "./view/form-component.js";
+import ExpenseListView from "./view/list-component.js";
+import ExpenseFilterView from "./view/filter-component.js";
+import ExpensePresenter from "./presenter/presenter.js";
 
-import RasModel from './model/ras-model.js';
-import RasPresenter from './presenter/ras-presenter.js';
-import FormPresenter from './presenter/form-presenter.js';
+const model = new ExpenseModel(expenses);
+const formView = new ExpenseFormView();
+const listView = new ExpenseListView();
+const filterView = new ExpenseFilterView();
+const presenter = new ExpensePresenter(model, formView, listView, filterView);
 
-const bodyContainer = document.querySelector('.container');
-const formContainer = document.querySelector('.ras-form');
-const filterContainer = document.querySelector('.ras-filter');
-const rasListContainer = document.querySelector('.ras-list');
-
-console.log('Containers found:', { 
-  bodyContainer: !!bodyContainer, 
-  formContainer: !!formContainer, 
-  filterContainer: !!filterContainer, 
-  rasListContainer: !!rasListContainer 
-});
-
-const rasModel = new RasModel();
-
-const formPresenter = new FormPresenter({
-  formContainer: formContainer,
-  rasModel: rasModel,
-});
-
-const rasPresenter = new RasPresenter({
-  boardContainer: rasListContainer,
-  rasModel: rasModel,
-});
-
-render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
-render(new FormHeaderComponent(), formContainer, RenderPosition.AFTERBEGIN);
-render(new FilterHeaderComponent(), filterContainer, RenderPosition.AFTERBEGIN);
-render(new RasListHeaderComponent(), rasListContainer, RenderPosition.AFTERBEGIN);
-
-formPresenter.init();
-rasPresenter.init();
-
+presenter.init();
